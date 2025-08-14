@@ -1,100 +1,60 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teste Pixel Purchase</title>
+  <script>
+    // Carregar Pixel
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
 
-<!-- Meta Pixel Code -->
-<script>
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod ?
-  n.callMethod.apply(n,arguments) : n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window, document,'script',
-  'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '1329892408553123');
-  fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=1329892408553123&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
+    fbq('init', '1329892408553123'); // Seu Pixel ID
+    fbq('track', 'PageView');
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Grupo VIP</title>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body, html { height: 100%; font-family: 'Segoe UI', sans-serif; }
-  .background {
-    background: url('https://i.postimg.cc/jjj3WDmY/fundo-colorido-desfocado-vivido.jpg') no-repeat center center;
-    background-size: cover;
-    filter: blur(10px);
-    height: 100%; width: 100%;
-    position: absolute; z-index: -1;
-  }
-  .content {
-    height: 100%; width: 100%;
-    display: flex; align-items: center; justify-content: center;
-    flex-direction: column; text-align: center;
-    padding: 2rem; color: white;
-    background: rgba(0, 0, 0, 0.4); position: relative;
-  }
-  h1 { font-size: 2.5rem; margin-bottom: 1rem; }
-  p { font-size: 1.2rem; }
-  .timer {
-    font-size: 2rem;
-    margin-top: 1rem;
-    font-weight: bold;
-    color: #ff4db8;
-  }
-  .btn {
-    display: none;
-    background-color: #ff4db8; color: white;
-    border: none; padding: 1rem 2rem; font-size: 1.1rem;
-    border-radius: 30px; cursor: pointer; text-decoration: none;
-    transition: background 0.3s ease; margin-top: 20px;
-  }
-  .btn:hover { background-color: #e60073; }
-</style>
+    // Quando o Pixel terminar de carregar, envia o Purchase
+    window.addEventListener('load', function() {
+      // Pequeno delay para garantir que carregou
+      setTimeout(function() {
+        console.log("Enviando Purchase...");
+        fbq('track', 'Purchase', {
+          value: 10.00,
+          currency: 'BRL'
+        });
+      }, 500); 
+    });
+  </script>
 </head>
-<body>
-  <div class="background"></div>
-  <div class="content">
-    <h1>😈 PAGAMENTO CONFIRMADO 😈</h1>
-    <p>O botão para acessar o grupo aparecerá em <span class="timer" id="contador">5</span> segundos...</p>
-    <a class="btn" href="https://t.me/monyziinbot" target="_blank" id="vipButton">🔥 Entrar no Grupo VIP 🔥</a>
-  </div>
+<body style="text-align:center; font-family:sans-serif; padding:50px;">
+  <h1>Obrigado pela compra!</h1>
+  <p>O botão aparecerá em 5 segundos...</p>
 
-<script>
-  // Função para tentar enviar o Purchase assim que o Pixel estiver pronto
-  function enviarPurchase() {
-    if (typeof fbq === "function" && !localStorage.getItem("fb_purchase_sent")) {
-      fbq('track', 'Purchase', { value: 20.00, currency: 'BRL' });
-      localStorage.setItem("fb_purchase_sent", "true");
-      console.log("✅ Evento Purchase enviado");
-    } else if (typeof fbq !== "function") {
-      // Se o pixel não carregou ainda, tenta de novo em 300ms
-      setTimeout(enviarPurchase, 300);
-    }
-  }
+  <button id="meuBotao" style="display:none; padding:12px 24px; background:#0de331; color:white; border:none; border-radius:8px; font-size:16px; cursor:pointer;">
+    Acessar Conteúdo
+  </button>
 
-  // Envia o Purchase ao carregar a página
-  enviarPurchase();
+  <script>
+    // Mostrar botão depois de 5 segundos
+    setTimeout(function() {
+      document.getElementById('meuBotao').style.display = 'inline-block';
+    }, 5000);
 
-  // Contador regressivo
-  let segundos = 5;
-  const contadorEl = document.getElementById("contador");
-  const botaoEl = document.getElementById("vipButton");
+    // Abrir link em nova aba ao clicar
+    document.getElementById('meuBotao').addEventListener('click', function() {
+      window.open('https://t.me/sobrvipacesso_bot', '_blank');
+    });
+  </script>
 
-  const intervalo = setInterval(() => {
-    segundos--;
-    contadorEl.textContent = segundos;
-    if (segundos <= 0) {
-      clearInterval(intervalo);
-      botaoEl.style.display = "inline-block";
-    }
-  }, 1000);
-</script>
+  <!-- Pixel nos  noscript -->
+  <noscript>
+    <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1329892408553123&ev=PageView&noscript=1"/>
+  </noscript>
 </body>
 </html>
